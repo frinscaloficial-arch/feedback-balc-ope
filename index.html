@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Avaliação de Atendimento</title>
+    <style>
+      :root {
+        --bg-color: #f4f7f6;
+        --primary-blue: #0099cc;
+        --white: #ffffff;
+        --text-dark: #333;
+      }
+
+      body {
+        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--bg-color);
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .container {
+        background: var(--white);
+        width: 95%;
+        max-width: 900px;
+        border-radius: 25px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        padding-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header {
+        background-color: var(--primary-blue);
+        color: white;
+        padding: 25px;
+        font-size: 2.2rem;
+        font-weight: 800;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+      }
+
+      .content {
+        padding: 20px 40px;
+      }
+
+      .question {
+        font-size: 1.6rem;
+        margin: 20px 0;
+        color: var(--text-dark);
+        font-weight: 500;
+      }
+
+      /* Escala Numérica (NPS) */
+      .nps-scale {
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+        margin-bottom: 30px;
+      }
+
+      .nps-btn {
+        flex: 1;
+        aspect-ratio: 1;
+        border: none;
+        color: white;
+        font-weight: bold;
+        font-size: 1.3rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-radius: 4px;
+      }
+
+      .nps-btn.selected {
+        transform: scale(1.15);
+        outline: 4px solid #333;
+        z-index: 2;
+      }
+
+      /* Cores NPS */
+      .nps-0 {
+        background-color: #e74c3c;
+      }
+      .nps-1 {
+        background-color: #e67e22;
+      }
+      .nps-2 {
+        background-color: #f39c12;
+      }
+      .nps-3 {
+        background-color: #f1c40f;
+      }
+      .nps-4 {
+        background-color: #ff9800;
+      }
+      .nps-5 {
+        background-color: #ffc107;
+      }
+      .nps-6 {
+        background-color: #ffeb3b;
+        color: #333;
+      }
+      .nps-7 {
+        background-color: #cddc39;
+        color: #333;
+      }
+      .nps-8 {
+        background-color: #8bc34a;
+      }
+      .nps-9 {
+        background-color: #4caf50;
+      }
+      .nps-10 {
+        background-color: #2e7d32;
+      }
+
+      /* Seção de Emojis */
+      .emoji-scale {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 30px;
+      }
+
+      .emoji-btn {
+        font-size: 4.5rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.2s;
+        filter: saturate(0.8);
+      }
+
+      .emoji-btn.selected {
+        transform: scale(1.3);
+        filter: saturate(1.5);
+      }
+
+      /* Comentário e Envio */
+      .comment-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+
+      textarea {
+        width: 100%;
+        max-width: 600px;
+        height: 80px;
+        border-radius: 12px;
+        border: 2px solid #ddd;
+        padding: 15px;
+        font-size: 1.1rem;
+        resize: none;
+        outline: none;
+      }
+
+      .send-btn {
+        background-color: var(--primary-blue);
+        color: white;
+        border: none;
+        padding: 15px 50px;
+        font-size: 1.4rem;
+        font-weight: bold;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 153, 204, 0.3);
+      }
+
+      .send-btn:active {
+        transform: scale(0.95);
+      }
+
+      /* Overlay de Sucesso */
+      #success-msg {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--white);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+      }
+
+      .success-icon {
+        font-size: 6rem;
+        color: #4caf50;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">AVALIAÇÃO</div>
+
+      <div class="content">
+        <p class="question">Como você avalia nosso atendimento?</p>
+
+        <div class="nps-scale" id="npsContainer">
+          <button class="nps-btn nps-0" onclick="selectNPS(0)">0</button>
+          <button class="nps-btn nps-1" onclick="selectNPS(1)">1</button>
+          <button class="nps-btn nps-2" onclick="selectNPS(2)">2</button>
+          <button class="nps-btn nps-3" onclick="selectNPS(3)">3</button>
+          <button class="nps-btn nps-4" onclick="selectNPS(4)">4</button>
+          <button class="nps-btn nps-5" onclick="selectNPS(5)">5</button>
+          <button class="nps-btn nps-6" onclick="selectNPS(6)">6</button>
+          <button class="nps-btn nps-7" onclick="selectNPS(7)">7</button>
+          <button class="nps-btn nps-8" onclick="selectNPS(8)">8</button>
+          <button class="nps-btn nps-9" onclick="selectNPS(9)">9</button>
+          <button class="nps-btn nps-10" onclick="selectNPS(10)">10</button>
+        </div>
+
+        <div class="emoji-scale" id="emojiContainer">
+          <button class="emoji-btn" onclick="selectEmoji('Muito Ruim', this)">
+            😡
+          </button>
+          <button class="emoji-btn" onclick="selectEmoji('Ruim', this)">
+            😟
+          </button>
+          <button class="emoji-btn" onclick="selectEmoji('Neutro', this)">
+            😐
+          </button>
+          <button class="emoji-btn" onclick="selectEmoji('Bom', this)">
+            😊
+          </button>
+          <button class="emoji-btn" onclick="selectEmoji('Excelente', this)">
+            🤩
+          </button>
+        </div>
+
+        <div class="comment-section">
+          <textarea
+            id="comment"
+            placeholder="Algum comentário opcional?"
+          ></textarea>
+          <button class="send-btn" onclick="submitFeedback()">
+            ENVIAR AVALIAÇÃO
+          </button>
+        </div>
+      </div>
+
+      <div id="success-msg">
+        <div class="success-icon">✅</div>
+        <h2 style="font-size: 2.5rem; color: #333">Muito obrigado!</h2>
+        <p style="font-size: 1.2rem; color: #666">
+          Sua opinião ajuda a melhorar nosso serviço.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      let selectedValue = null;
+
+      function selectNPS(num) {
+        selectedValue = num;
+        clearSelection();
+        document.querySelectorAll(".nps-btn")[num].classList.add("selected");
+      }
+
+      function selectEmoji(label, el) {
+        selectedValue = label;
+        clearSelection();
+        el.classList.add("selected");
+      }
+
+      function clearSelection() {
+        document
+          .querySelectorAll(".nps-btn, .emoji-btn")
+          .forEach((btn) => btn.classList.remove("selected"));
+      }
+
+      async function submitFeedback() {
+        if (selectedValue === null) {
+          alert("Por favor, selecione uma nota ou emoji antes de enviar.");
+          return;
+        }
+
+        const comment = document.getElementById("comment").value;
+        const URL_PLANILHA =
+          "https://script.google.com/macros/s/AKfycbx66s9VVmE-m1gZgqH1JyU4EHAFrnHcobG0Bc2WgLsVmkf46CAN2aC-6uO5Ee7cgyMA/exec"; // <--- COLOQUE SUA URL AQUI
+
+        // Mostrar tela de sucesso imediatamente
+        const msg = document.getElementById("success-msg");
+        msg.style.display = "flex";
+
+        try {
+          await fetch(URL_PLANILHA, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              valor: selectedValue,
+              comentario: comment,
+            }),
+          });
+        } catch (e) {
+          console.error("Erro ao enviar", e);
+        }
+
+        // Resetar para o próximo cliente após 4 segundos
+        setTimeout(() => {
+          msg.style.display = "none";
+          document.getElementById("comment").value = "";
+          selectedValue = null;
+          clearSelection();
+        }, 4000);
+      }
+    </script>
+  </body>
+</html>
