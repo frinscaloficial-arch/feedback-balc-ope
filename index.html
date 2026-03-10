@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesquisa de Satisfação - Frinscal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-blue: #3E4A9B;
-            --bg-light: #FFFFFF;
-            --tag-unselected: #F0F2F5;
             --tag-selected: #3E4A9B;
+            --border-color: #D1D5DB;
         }
 
         body {
@@ -29,117 +28,92 @@
             margin-bottom: 20px;
         }
 
-        .header-text h1 { font-size: 2.2rem; margin: 0; }
+        .header-text h1 { font-size: 1.8rem; margin: 0; line-height: 1.2; }
 
         .card {
             background: white;
-            border-radius: 50px; /* Bordas bem arredondadas como na imagem */
-            padding: 40px;
+            border-radius: 40px;
+            padding: 30px;
             width: 100%;
-            max-width: 600px;
+            max-width: 550px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        .question-title {
-            font-size: 1.2rem;
-            font-weight: bold;
+        /* Estilo para o campo Código do Cliente */
+        .input-group {
             margin-bottom: 25px;
+            text-align: left;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 25px;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            outline: none;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .question-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
             color: #333;
         }
 
-        /* Escala Numérica NPS */
-        .nps-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 5px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .nps-item { position: relative; flex: 1; }
-
-        .nps-item input {
-            position: absolute;
-            opacity: 0;
-            cursor: pointer;
-        }
-
+        /* NPS e Tags (Mantidos do anterior) */
+        .nps-container { display: flex; justify-content: space-between; gap: 4px; margin-bottom: 25px; flex-wrap: wrap; }
+        .nps-item { position: relative; flex: 1; min-width: 30px; }
+        .nps-item input { position: absolute; opacity: 0; cursor: pointer; }
         .nps-label {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-            margin: 0 auto;
+            display: flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; border-radius: 50%; color: white;
+            font-weight: bold; cursor: pointer; transition: transform 0.2s; margin: 0 auto; font-size: 0.9rem;
         }
 
-        /* Cores da Escala */
-        .n-0, .n-1, .n-2 { background-color: #E74C3C; } /* Vermelho */
-        .n-3, .n-4, .n-5 { background-color: #E67E22; } /* Laranja */
-        .n-6, .n-7, .n-8 { background-color: #F1C40F; } /* Amarelo */
-        .n-9, .n-10 { background-color: #2ECC71; }      /* Verde */
+        .n-0, .n-1, .n-2 { background-color: #E74C3C; }
+        .n-3, .n-4, .n-5 { background-color: #E67E22; }
+        .n-6, .n-7, .n-8 { background-color: #F1C40F; }
+        .n-9, .n-10 { background-color: #2ECC71; }
 
-        .nps-item input:checked + .nps-label {
-            transform: scale(1.3);
-            outline: 3px solid #333;
-        }
+        .nps-item input:checked + .nps-label { transform: scale(1.25); box-shadow: 0 0 0 3px #333; }
 
-        /* Tags (Pontos Positivos/Negativos) */
-        .section-title {
-            font-size: 1.1rem;
-            margin: 20px 0 10px;
-        }
-        .section-title b { color: black; }
-
-        .tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
+        .section-title { font-size: 1rem; margin: 20px 0 10px; }
+        .tags-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 15px; }
         .tag-item input { display: none; }
-
         .tag-label {
-            display: inline-block;
-            padding: 8px 18px;
-            border: 1px solid #D1D5DB;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: #7F8C8D;
-            cursor: pointer;
-            transition: all 0.3s;
+            display: inline-block; padding: 6px 15px; border: 1px solid var(--border-color);
+            border-radius: 20px; font-size: 0.85rem; color: #7F8C8D; cursor: pointer; transition: all 0.2s;
         }
+        .tag-item input:checked + .tag-label { background-color: var(--tag-selected); color: white; border-color: var(--tag-selected); }
 
-        .tag-item input:checked + .tag-label {
-            background-color: var(--tag-selected);
-            color: white;
-            border-color: var(--tag-selected);
-        }
-
-        .logo {
-            margin-top: 30px;
-            max-width: 180px;
-        }
-
+        .logo { margin-top: 25px; max-width: 150px; }
+        
         button {
-            margin-top: 20px;
-            padding: 12px 40px;
-            background-color: #2ECC71;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
+            margin-top: 20px; padding: 12px 40px; background-color: #2ECC71;
+            color: white; border: none; border-radius: 25px; font-weight: bold;
+            cursor: pointer; font-size: 1rem; transition: background 0.3s;
         }
-
+        button:hover { background-color: #27ae60; }
         #statusMsg { margin-top: 15px; font-weight: bold; }
     </style>
 </head>
@@ -151,6 +125,11 @@
 
     <div class="card">
         <form id="feedbackForm">
+            <div class="input-group">
+                <label for="codigo_cliente">Código do Cliente</label>
+                <input type="text" id="codigo_cliente" name="codigo_cliente" class="input-field" placeholder="Ex: 12345" required>
+            </div>
+
             <div class="question-title">Como você avalia nosso atendimento de 0 a 10?</div>
             
             <div class="nps-container">
@@ -190,7 +169,9 @@
         </form>
     </div>
 
-    <img src="https://frinscaldistribuidora.agilecdn.com.br/imgs/frinscal-logo-1682131837.png" alt="Logo Frinscal" class="logo"> <script>
+    <img src="https://frinscaldistribuidora.agilecdn.com.br/imgs/frinscal-logo-1682131837.png" alt="Logo Frinscal" class="logo">
+
+    <script>
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzW7zLYfRXBg_rWCbC6QLUFuBag4Tz5SPhsaP0_dWXuImj_wkdUE2rPQDQTNfIDEUw/exec';
         const form = document.getElementById('feedbackForm');
 
@@ -199,19 +180,20 @@
             document.getElementById('btnEnviar').disabled = true;
             document.getElementById('btnEnviar').innerText = "Enviando...";
 
-            // Coleta os múltiplos valores de checkboxes em uma string
             const formData = new FormData(form);
             
             fetch(scriptURL, { method: 'POST', body: formData})
                 .then(response => {
-                    document.getElementById('statusMsg').innerHTML = "✅ Obrigado pelo feedback!";
+                    document.getElementById('statusMsg').innerHTML = "✅ Feedback enviado com sucesso!";
+                    document.getElementById('statusMsg').style.color = "green";
                     form.reset();
                     document.getElementById('btnEnviar').disabled = false;
                     document.getElementById('btnEnviar').innerText = "Enviar Pesquisa";
                 })
                 .catch(error => {
                     document.getElementById('statusMsg').innerHTML = "❌ Erro ao enviar.";
-                    console.error('Error!', error.message);
+                    document.getElementById('statusMsg').style.color = "red";
+                    document.getElementById('btnEnviar').disabled = false;
                 });
         });
     </script>
