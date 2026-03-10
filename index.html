@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesquisa de Satisfação - Frinscal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-blue: #3E4A9B;
+            --btn-green: #40D380;
             --tag-selected: #3E4A9B;
-            --border-color: #D1D5DB;
+            --border-light: #D1D5DB;
         }
 
         body {
@@ -19,183 +20,205 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
-        }
-
-        .header-text {
+            justify-content: center;
+            min-height: 100vh;
             color: white;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .header-text h1 { font-size: 1.8rem; margin: 0; line-height: 1.2; }
-
-        .card {
-            background: white;
-            border-radius: 40px;
-            padding: 30px;
-            width: 100%;
-            max-width: 550px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        /* Estilo para o campo Código do Cliente */
-        .input-group {
-            margin-bottom: 25px;
-            text-align: left;
-            max-width: 90%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .input-group label {
-            display: block;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #333;
-            font-size: 0.95rem;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 12px 20px;
-            border: 2px solid var(--border-color);
-            border-radius: 25px;
-            font-size: 1rem;
-            font-family: 'Montserrat', sans-serif;
-            outline: none;
-            transition: border-color 0.3s;
+            padding: 20px;
             box-sizing: border-box;
         }
 
-        .input-field:focus {
-            border-color: var(--primary-blue);
-        }
+        .container { width: 100%; max-width: 550px; text-align: center; }
+        
+        /* Transições de Tela */
+        .step { display: none; flex-direction: column; align-items: center; width: 100%; }
+        .step.active { display: flex; animation: fadeIn 0.4s ease; }
 
-        .question-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 20px;
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { font-weight: 800; font-size: 2.2rem; margin-bottom: 40px; line-height: 1.1; }
+
+        .card {
+            background: white;
+            border-radius: 60px;
+            padding: 40px 30px;
+            width: 100%;
             color: #333;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-sizing: border-box;
         }
 
-        /* NPS e Tags (Mantidos do anterior) */
-        .nps-container { display: flex; justify-content: space-between; gap: 4px; margin-bottom: 25px; flex-wrap: wrap; }
-        .nps-item { position: relative; flex: 1; min-width: 30px; }
-        .nps-item input { position: absolute; opacity: 0; cursor: pointer; }
+        /* Tela 1: Input de Pedido */
+        .label-large { font-size: 1.6rem; color: white; margin-bottom: 25px; font-weight: 600; }
+        .input-pedido {
+            width: 100%;
+            padding: 30px;
+            border: none;
+            border-radius: 40px;
+            font-size: 1.5rem;
+            text-align: center;
+            outline: none;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* Tela 2: NPS e Tags */
+        .question { font-size: 1.1rem; font-weight: 600; margin-bottom: 25px; }
+        .nps-container { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 30px; }
+        .nps-item input { display: none; }
         .nps-label {
             display: flex; align-items: center; justify-content: center;
-            width: 32px; height: 32px; border-radius: 50%; color: white;
-            font-weight: bold; cursor: pointer; transition: transform 0.2s; margin: 0 auto; font-size: 0.9rem;
+            width: 35px; height: 35px; border-radius: 50%; color: white;
+            font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 1rem;
         }
-
         .n-0, .n-1, .n-2 { background-color: #E74C3C; }
         .n-3, .n-4, .n-5 { background-color: #E67E22; }
         .n-6, .n-7, .n-8 { background-color: #F1C40F; }
         .n-9, .n-10 { background-color: #2ECC71; }
+        .nps-item input:checked + .nps-label { transform: scale(1.3); box-shadow: 0 0 0 3px #333; }
 
-        .nps-item input:checked + .nps-label { transform: scale(1.25); box-shadow: 0 0 0 3px #333; }
-
-        .section-title { font-size: 1rem; margin: 20px 0 10px; }
-        .tags-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 15px; }
+        .tag-section { margin: 20px 0; }
+        .tag-title { font-size: 1.1rem; margin-bottom: 12px; }
+        .tag-title b { color: var(--primary-blue); }
+        .tags-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
         .tag-item input { display: none; }
         .tag-label {
-            display: inline-block; padding: 6px 15px; border: 1px solid var(--border-color);
-            border-radius: 20px; font-size: 0.85rem; color: #7F8C8D; cursor: pointer; transition: all 0.2s;
+            padding: 8px 18px; border: 1px solid var(--border-light);
+            border-radius: 25px; font-size: 0.9rem; color: #7F8C8D; cursor: pointer;
         }
-        .tag-item input:checked + .tag-label { background-color: var(--tag-selected); color: white; border-color: var(--tag-selected); }
+        .tag-item input:checked + .tag-label { background: var(--tag-selected); color: white; border-color: var(--tag-selected); }
 
-        .logo { margin-top: 25px; max-width: 150px; }
-        
-        button {
-            margin-top: 20px; padding: 12px 40px; background-color: #2ECC71;
-            color: white; border: none; border-radius: 25px; font-weight: bold;
-            cursor: pointer; font-size: 1rem; transition: background 0.3s;
+        /* Tela 3: Sucesso */
+        .icon-check { width: 100px; height: 100px; background: #2ECC71; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px; }
+        .icon-check::after { content: '✓'; color: white; font-size: 60px; }
+        .success-text { font-size: 1.1rem; line-height: 1.5; color: #444; }
+        .timer-text { margin-top: 30px; font-size: 1.1rem; font-weight: 400; }
+
+        /* Botões */
+        .btn {
+            background-color: var(--btn-green);
+            color: white; border: none; border-radius: 40px;
+            padding: 15px 50px; font-size: 1.5rem; font-weight: 700;
+            cursor: pointer; display: flex; align-items: center; gap: 15px;
+            margin-top: 30px; transition: 0.3s; text-transform: uppercase;
         }
-        button:hover { background-color: #27ae60; }
-        #statusMsg { margin-top: 15px; font-weight: bold; }
+        .btn:hover { filter: brightness(1.1); }
+        .btn-enviar { margin: 30px auto 0; font-size: 1.2rem; }
+
+        .logo { margin-top: 50px; width: 180px; }
     </style>
 </head>
 <body>
 
-    <div class="header-text">
-        <h1>Sua opinião é<br>importante para nós!</h1>
+    <div class="container">
+        <div id="step1" class="step active">
+            <h1>Sua opinião é<br>importante para nós!</h1>
+            <div class="label-large">Número de Pedido</div>
+            <input type="text" id="pedidoInput" class="input-pedido" placeholder="Ex.: 12345...">
+            <button class="btn" onclick="nextStep(2)">Iniciar <span>→</span></button>
+        </div>
+
+        <div id="step2" class="step">
+            <h1>Sua opinião é<br>importante para nós!</h1>
+            <div class="card">
+                <form id="feedbackForm">
+                    <div class="question">Como você avalia nosso atendimento de 0 a 10?</div>
+                    <div class="nps-container">
+                        <script>
+                            for(let i=0; i<=10; i++){
+                                let c = i<=2 ? 'n-0' : i<=5 ? 'n-3' : i<=8 ? 'n-6' : 'n-9';
+                                document.write(`<label class="nps-item"><input type="radio" name="nota" value="${i}" required><span class="nps-label ${c}">${i}</span></label>`);
+                            }
+                        </script>
+                    </div>
+
+                    <div class="tag-section">
+                        <div class="tag-title">Pontos <b>Positivos</b></div>
+                        <div class="tags-grid" id="pos-grid"></div>
+                    </div>
+
+                    <div class="tag-section">
+                        <div class="tag-title">Pontos <b>Negativos</b></div>
+                        <div class="tags-grid" id="neg-grid"></div>
+                    </div>
+                </form>
+            </div>
+            <button class="btn btn-enviar" onclick="enviarDados()">Enviar</button>
+        </div>
+
+        <div id="step3" class="step">
+            <h1 style="font-size: 1.8rem;">Agradecemos por<br>compartilhar sua opinião.</h1>
+            <div class="card">
+                <div class="icon-check"></div>
+                <p class="success-text">Seu feedback foi recebido com sucesso e é fundamental para que possamos aprimorar continuamente nosso atendimento.</p>
+            </div>
+            <div class="timer-text">Tempo para reiniciar a pesquisa: <b id="timer">5</b></div>
+        </div>
+
+        <img src="https://frinscaldistribuidora.agilecdn.com.br/imgs/frinscal-logo-1682131837.png" class="logo" alt="Logo Frinscal">
     </div>
-
-    <div class="card">
-        <form id="feedbackForm">
-            <div class="input-group">
-                <label for="codigo_cliente">Código do Cliente</label>
-                <input type="text" id="codigo_cliente" name="codigo_cliente" class="input-field" placeholder="Ex: 12345" required>
-            </div>
-
-            <div class="question-title">Como você avalia nosso atendimento de 0 a 10?</div>
-            
-            <div class="nps-container">
-                <script>
-                    for(let i=0; i<=10; i++){
-                        let colorClass = i <= 2 ? 'n-0' : i <= 5 ? 'n-3' : i <= 8 ? 'n-6' : 'n-9';
-                        document.write(`
-                            <div class="nps-item">
-                                <input type="radio" name="nota" value="${i}" id="n${i}" required>
-                                <label for="n${i}" class="nps-label ${colorClass}">${i}</label>
-                            </div>
-                        `);
-                    }
-                </script>
-            </div>
-
-            <div class="section-title">Pontos <b>Positivos</b></div>
-            <div class="tags-container">
-                <label class="tag-item"><input type="checkbox" name="positivos" value="Pagamento"><span class="tag-label">Pagamento</span></label>
-                <label class="tag-item"><input type="checkbox" name="positivos" value="Recebimento"><span class="tag-label">Recebimento</span></label>
-                <label class="tag-item"><input type="checkbox" name="positivos" value="Qualidade"><span class="tag-label">Qualidade</span></label>
-                <label class="tag-item"><input type="checkbox" name="positivos" value="Atendimento"><span class="tag-label">Atendimento</span></label>
-                <label class="tag-item"><input type="checkbox" name="positivos" value="Ambiente"><span class="tag-label">Ambiente</span></label>
-            </div>
-
-            <div class="section-title">Pontos <b>Negativos</b></div>
-            <div class="tags-container">
-                <label class="tag-item"><input type="checkbox" name="negativos" value="Pagamento"><span class="tag-label">Pagamento</span></label>
-                <label class="tag-item"><input type="checkbox" name="negativos" value="Recebimento"><span class="tag-label">Recebimento</span></label>
-                <label class="tag-item"><input type="checkbox" name="negativos" value="Qualidade"><span class="tag-label">Qualidade</span></label>
-                <label class="tag-item"><input type="checkbox" name="negativos" value="Atendimento"><span class="tag-label">Atendimento</span></label>
-                <label class="tag-item"><input type="checkbox" name="negativos" value="Ambiente"><span class="tag-label">Ambiente</span></label>
-            </div>
-
-            <button type="submit" id="btnEnviar">Enviar Pesquisa</button>
-            <div id="statusMsg"></div>
-        </form>
-    </div>
-
-    <img src="https://frinscaldistribuidora.agilecdn.com.br/imgs/frinscal-logo-1682131837.png" alt="Logo Frinscal" class="logo">
 
     <script>
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzW7zLYfRXBg_rWCbC6QLUFuBag4Tz5SPhsaP0_dWXuImj_wkdUE2rPQDQTNfIDEUw/exec';
-        const form = document.getElementById('feedbackForm');
-
-        form.addEventListener('submit', e => {
-            e.preventDefault();
-            document.getElementById('btnEnviar').disabled = true;
-            document.getElementById('btnEnviar').innerText = "Enviando...";
-
-            const formData = new FormData(form);
-            
-            fetch(scriptURL, { method: 'POST', body: formData})
-                .then(response => {
-                    document.getElementById('statusMsg').innerHTML = "✅ Feedback enviado com sucesso!";
-                    document.getElementById('statusMsg').style.color = "green";
-                    form.reset();
-                    document.getElementById('btnEnviar').disabled = false;
-                    document.getElementById('btnEnviar').innerText = "Enviar Pesquisa";
-                })
-                .catch(error => {
-                    document.getElementById('statusMsg').innerHTML = "❌ Erro ao enviar.";
-                    document.getElementById('statusMsg').style.color = "red";
-                    document.getElementById('btnEnviar').disabled = false;
-                });
+        const tags = ["Pagamento", "Recebimento", "Qualidade", "Atendimento", "Ambiente"];
+        
+        // Popular Tags
+        ['pos-grid', 'neg-grid'].forEach(id => {
+            const container = document.getElementById(id);
+            const prefix = id.split('-')[0];
+            tags.forEach(t => {
+                container.innerHTML += `<label class="tag-item"><input type="checkbox" name="${prefix}" value="${t}"><span class="tag-label">${t}</span></label>`;
+            });
         });
+
+        function nextStep(step) {
+            if(step === 2 && !document.getElementById('pedidoInput').value) {
+                alert("Por favor, digite o número do pedido.");
+                return;
+            }
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+        }
+
+        function enviarDados() {
+            const form = document.getElementById('feedbackForm');
+            const nota = form.querySelector('input[name="nota"]:checked');
+            
+            if(!nota) { alert("Selecione uma nota de 0 a 10."); return; }
+
+            const btn = document.querySelector('.btn-enviar');
+            btn.innerText = "Enviando...";
+            btn.disabled = true;
+
+            const pedido = document.getElementById('pedidoInput').value;
+            const positivos = Array.from(form.querySelectorAll('input[name="pos"]:checked')).map(i => i.value).join(", ");
+            const negativos = Array.from(form.querySelectorAll('input[name="neg"]:checked')).map(i => i.value).join(", ");
+
+            const formData = new FormData();
+            formData.append("pedido", pedido);
+            formData.append("nota", nota.value);
+            formData.append("positivos", positivos);
+            formData.append("negativos", negativos);
+
+            fetch(scriptURL, { method: 'POST', body: formData })
+                .then(() => {
+                    nextStep(3);
+                    startTimer();
+                })
+                .catch(() => alert("Erro ao enviar. Tente novamente."));
+        }
+
+        function startTimer() {
+            let timeLeft = 5;
+            const timerEl = document.getElementById('timer');
+            const interval = setInterval(() => {
+                timeLeft--;
+                timerEl.innerText = timeLeft;
+                if(timeLeft <= 0) {
+                    clearInterval(interval);
+                    window.location.reload(); // Reinicia o formulário
+                }
+            }, 1000);
+        }
     </script>
 </body>
 </html>
