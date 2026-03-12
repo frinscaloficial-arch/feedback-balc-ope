@@ -7,9 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-blue: #3E4A9B;
+            --primary-blue: #3D4392;
             --btn-green: #40D380;
-            --tag-selected: #3E4A9B;
+            --tag-selected: #3D4392;
             --border-light: #D1D5DB;
         }
 
@@ -113,7 +113,7 @@
         <div id="step1" class="step active">
             <h1>Sua opinião é<br>importante para nós!</h1>
             <div class="label-large">Número de Pedido</div>
-            <input type="text" id="pedidoInput" class="input-pedido" placeholder="Ex.: 12345...">
+            <input type="number" id="pedidoInput" class="input-pedido" placeholder="Ex.: 12345..." minlength="10" maxlength="10" required>
             <button class="btn" onclick="nextStep(2)">Iniciar <span>→</span></button>
         </div>
 
@@ -171,10 +171,33 @@
         });
 
         function nextStep(step) {
-            if(step === 2 && !document.getElementById('pedidoInput').value) {
-                alert("Por favor, digite o número do pedido.");
-                return;
+            const input = document.getElementById('pedidoInput');
+            const valor = input.value.trim();
+        
+            if (step === 2) {
+                // Verifica se está vazio
+                if (valor === "") {
+                    alert("Por favor, digite o número do pedido.");
+                    input.focus();
+                    return;
+                }
+                
+                // Verifica limite mínimo
+                if (valor.length < 10) {
+                    alert("O número do pedido é muito curto (mínimo 10 digitos).");
+                    input.focus();
+                    return;
+                }
+        
+                // Verifica limite máximo (opcional, pois o maxlength já bloqueia a digitação)
+                if (valor.length > 10) {
+                    alert("Limite de 10 digitos ultrapassado.");
+                    input.focus();
+                    return;
+                }
             }
+        
+            // Se passar nas validações, avança
             document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
             document.getElementById('step' + step).classList.add('active');
         }
