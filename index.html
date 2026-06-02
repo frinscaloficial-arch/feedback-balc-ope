@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesquisa de Satisfação - Frinscal - PE</title>
+    <title>Pesquisa de Satisfação - Frinscal - AL</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -25,17 +25,18 @@
             color: white;
             padding: 20px;
             box-sizing: border-box;
+
         }
 
         .container { width: 100%; max-width: 550px; text-align: center; }
-        
+
+        /* Transições de Tela */
         .step { display: none; flex-direction: column; align-items: center; width: 100%; }
         .step.active { display: flex; animation: fadeIn 0.4s ease; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         h1 { font-weight: 800; font-size: 2.2rem; margin-bottom: 40px; line-height: 1.1; }
-
         .card {
             background: white;
             border-radius: 60px;
@@ -45,7 +46,20 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             box-sizing: border-box;
         }
-
+        /* Tela 1: Input de Pedido */
+        .label-large { font-size: 1.6rem; color: white; margin-bottom: 25px; font-weight: 600; }
+        .input-pedido {
+            width: 80%;
+            padding: 30px;
+            border: none;
+            border-radius: 40px;
+            font-size: 1.5rem;
+            text-align: center;
+            outline: none;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        /* Tela 2: NPS e Tags */
         .question { font-size: 1.1rem; font-weight: 600; margin-bottom: 25px; }
         .nps-container { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 30px; }
         .nps-item input { display: none; }
@@ -58,25 +72,24 @@
         .n-3, .n-4, .n-5 { background-color: #E67E22; }
         .n-6, .n-7, .n-8 { background-color: #F1C40F; }
         .n-9, .n-10 { background-color: #2ECC71; }
-        .nps-item input:checked + .nps-label { transform: scale(1.3); box-shadow: 0 0 0 3px #333; }
 
+        .nps-item input:checked + .nps-label { transform: scale(1.3); box-shadow: 0 0 0 3px #333; }
         .tag-section { margin: 20px 0; }
         .tag-title { font-size: 1.1rem; margin-bottom: 12px; }
         .tag-title b { color: var(--primary-blue); }
-        .tags-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+        .tags-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
         .tag-item input { display: none; }
         .tag-label {
             padding: 8px 18px; border: 1px solid var(--border-light);
             border-radius: 25px; font-size: 0.9rem; color: #7F8C8D; cursor: pointer;
-            display: block;
         }
         .tag-item input:checked + .tag-label { background: var(--tag-selected); color: white; border-color: var(--tag-selected); }
-
+        /* Tela 3: Sucesso */
         .icon-check { width: 100px; height: 100px; background: #2ECC71; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px; }
         .icon-check::after { content: '✓'; color: white; font-size: 60px; }
         .success-text { font-size: 1.1rem; line-height: 1.5; color: #444; }
         .timer-text { margin-top: 30px; font-size: 1.1rem; font-weight: 400; }
-
+        /* Botões */
         .btn {
             background-color: var(--btn-green);
             color: white; border: none; border-radius: 40px;
@@ -84,14 +97,20 @@
             cursor: pointer; display: flex; align-items: center; gap: 15px;
             margin-top: 30px; transition: 0.3s; text-transform: uppercase;
         }
+        .btn:hover { filter: brightness(1.1); }
         .btn-enviar { margin: 30px auto 0; font-size: 1.2rem; }
-        .logo { margin-top: 50px; width: 180px; }
+        .logo { margin-top: 50px; width: 180px; gap: 10px; }
     </style>
 </head>
 <body>
-
     <div class="container">
         <div id="step1" class="step active">
+            <h1>Sua opinião é<br>importante para nós!</h1>
+            <div class="label-large">Número de Pedido</div>
+            <input type="number" id="pedidoInput" class="input-pedido" placeholder="Ex.: 12345..." minlength="10" maxlength="10" required>
+            <button class="btn" onclick="nextStep(2)">Iniciar <span>→</span></button>
+        </div>
+        <div id="step1" class="step">
             <h1>Sua opinião é<br>importante para nós!</h1>
             <div class="card">
                 <form id="feedbackForm">
@@ -104,39 +123,32 @@
                             }
                         </script>
                     </div>
-
                     <div class="tag-section">
                         <div class="tag-title">Pontos <b>Positivos</b></div>
                         <div class="tags-grid" id="pos-grid"></div>
                     </div>
-
                     <div class="tag-section">
                         <div class="tag-title">Pontos <b>Negativos</b></div>
                         <div class="tags-grid" id="neg-grid"></div>
                     </div>
                 </form>
             </div>
-            <button class="btn btn-enviar" onclick="enviarDados()">Enviar Avaliação</button>
+            <button class="btn btn-enviar" onclick="enviarDados()">Enviar</button>
         </div>
-
         <div id="step2" class="step">
-            <h1 style="font-size: 1.8rem;">Muito obrigado!</h1>
+            <h1 style="font-size: 1.8rem;">Agradecemos por<br>compartilhar sua opinião.</h1>
             <div class="card">
                 <div class="icon-check"></div>
-                <p class="success-text">Sua opinião ajuda a melhorar nosso serviço continuamente.</p>
+                <p class="success-text">Seu feedback foi recebido com sucesso e é fundamental para que possamos aprimorar continuamente nosso atendimento.</p>
             </div>
-            <div class="timer-text">Reiniciando em: <b id="timer">10</b>s</div>
+            <div class="timer-text">Tempo para reiniciar a pesquisa: <b id="timer">5</b></div>
         </div>
-
-        <img src="g15.png" class="logo" alt="Logo">
+        <img src="g15.png" class="logo" alt="Logo Frinscal e Comercial">
     </div>
-
     <script>
-        // ATENÇÃO: Substitua pelo seu link de implantação atualizado!
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzW7zLYfRXBg_rWCbC6QLUFuBag4Tz5SPhsaP0_dWXuImj_wkdUE2rPQDQTNfIDEUw/exec'; 
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzW7zLYfRXBg_rWCbC6QLUFuBag4Tz5SPhsaP0_dWXuImj_wkdUE2rPQDQTNfIDEUw/exec';
         const tags = ["Pagamento", "Recebimento", "Qualidade", "Atendimento", "Ambiente"];
-        
-        // Gerar Tags
+        // Popular Tags
         ['pos-grid', 'neg-grid'].forEach(id => {
             const container = document.getElementById(id);
             const prefix = id.split('-')[0];
@@ -144,48 +156,55 @@
                 container.innerHTML += `<label class="tag-item"><input type="checkbox" name="${prefix}" value="${t}"><span class="tag-label">${t}</span></label>`;
             });
         });
-
         function nextStep(step) {
+            const input = document.getElementById('pedidoInput');
+            const valor = input.value.trim();
+            if (step === 2) {
+                // Verifica se está vazio
+                if (valor === "") {
+                    alert("Por favor, digite o número do pedido.");
+                    input.focus();
+                    return;
+                }
+                // Verifica limite mínimo
+                if (valor.length < 10) {
+                    alert("O número do pedido é muito curto (mínimo 10 digitos).");
+                    input.focus();
+                    return;
+                }
+                // Verifica limite máximo (opcional, pois o maxlength já bloqueia a digitação)
+                if (valor.length > 10) {
+                    alert("Limite de 10 digitos ultrapassado.");
+                    input.focus();
+                    return;
+                }
+            }
+            // Se passar nas validações, avança
             document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
             document.getElementById('step' + step).classList.add('active');
         }
-
         function enviarDados() {
             const form = document.getElementById('feedbackForm');
             const nota = form.querySelector('input[name="nota"]:checked');
-            
-            if(!nota) { alert("Por favor, selecione uma nota."); return; }
-
+            if(!nota) { alert("Selecione uma nota de 0 a 10."); return; }
             const btn = document.querySelector('.btn-enviar');
             btn.innerText = "Enviando...";
             btn.disabled = true;
-
+            const pedido = document.getElementById('pedidoInput').value;
             const positivos = Array.from(form.querySelectorAll('input[name="pos"]:checked')).map(i => i.value).join(", ");
             const negativos = Array.from(form.querySelectorAll('input[name="neg"]:checked')).map(i => i.value).join(", ");
-
-            // CORREÇÃO: Usar URLSearchParams para compatibilidade total com e.parameter
-            const params = new URLSearchParams();
-            params.append("pedido", "Não informado");
-            params.append("nota", nota.value);
-            params.append("positivos", positivos);
-            params.append("negativos", negativos);
-
-            fetch(scriptURL, { 
-                method: 'POST', 
-                body: params,
-                mode: 'no-cors' // Crucial para o Google Apps Script
-            })
-            .then(() => {
-                nextStep(2);
-                startTimer();
-            })
-            .catch(() => {
-                alert("Erro de conexão. Tente novamente.");
-                btn.innerText = "Enviar Avaliação";
-                btn.disabled = false;
-            });
+            const formData = new FormData();
+            formData.append("pedido", pedido);
+            formData.append("nota", nota.value);
+            formData.append("positivos", positivos);
+            formData.append("negativos", negativos);
+            fetch(scriptURL, { method: 'POST', body: formData })
+                .then(() => {
+                    nextStep(3);
+                    startTimer();
+                })
+                .catch(() => alert("Erro ao enviar. Tente novamente."));
         }
-
         function startTimer() {
             let timeLeft = 10;
             const timerEl = document.getElementById('timer');
@@ -194,7 +213,7 @@
                 timerEl.innerText = timeLeft;
                 if(timeLeft <= 0) {
                     clearInterval(interval);
-                    window.location.reload();
+                    window.location.reload(); // Reinicia o formulário
                 }
             }, 1000);
         }
