@@ -49,7 +49,7 @@
 
         /* Tela 1: Input de Pedido */
         .label-large { font-size: 1.6rem; color: white; margin-bottom: 25px; font-weight: 600; }
-        .input-pedido {
+        .input-nf {
             width: 80%;
             padding: 30px;
             border: none;
@@ -113,8 +113,8 @@
     <div class="container">
         <div id="step1" class="step active">
             <h1>Sua opinião é<br>importante para nós!</h1>
-            <div class="label-large">Número de Pedido</div>
-            <input type="number" id="pedidoInput" class="input-pedido" placeholder="Ex.: 12345..." minlength="10" maxlength="10" required>
+            <div class="label-large">Número da sua Nota Fiscal (NF)</div>
+            <input type="number" id="nfInput" class="input-nf" placeholder="Ex.: 123456..." minlength="6" maxlength="6" required>
             <button class="btn" onclick="nextStep(2)">Iniciar <span>→</span></button>
         </div>
 
@@ -133,12 +133,12 @@
                     </div>
 
                     <div class="tag-section">
-                        <div class="tag-title">Pontos <b>Positivos</b></div>
+                        <div class="tag-title">Pontos <b>Positivos</b>do Atendimento</div>
                         <div class="tags-grid" id="pos-grid"></div>
                     </div>
 
                     <div class="tag-section">
-                        <div class="tag-title">Pontos <b>Negativos</b></div>
+                        <div class="tag-title">Pontos <b>Negativos</b>do Atendimento</div>
                         <div class="tags-grid" id="neg-grid"></div>
                     </div>
                 </form>
@@ -175,27 +175,27 @@
         });
 
         function nextStep(step) {
-            const input = document.getElementById('pedidoInput');
+            const input = document.getElementById('nfInput');
             const valor = input.value.trim();
         
             if (step === 2) {
                 // Verifica se está vazio
                 if (valor === "") {
-                    alert("Por favor, digite o número do pedido.");
+                    alert("Por favor, digite o número da sua Nota Fiscal.");
                     input.focus();
                     return;
                 }
                 
                 // Verifica limite mínimo
-                if (valor.length < 10) {
-                    alert("O número do pedido é muito curto (mínimo 10 digitos).");
+                if (valor.length < 6) {
+                    alert("O número do pedido é muito curto (mínimo 6 digitos).");
                     input.focus();
                     return;
                 }
         
                 // Verifica limite máximo (opcional, pois o maxlength já bloqueia a digitação)
-                if (valor.length > 10) {
-                    alert("Limite de 10 digitos ultrapassado.");
+                if (valor.length > 6) {
+                    alert("Limite de 6 digitos ultrapassado.");
                     input.focus();
                     return;
                 }
@@ -213,15 +213,15 @@
             if(!nota) { alert("Selecione uma nota de 0 a 10."); return; }
 
             const btn = document.querySelector('.btn-enviar');
-            btn.innerText = "Enviando...";
+            btn.innerText = "Enviando sua resposta...";
             btn.disabled = true;
 
-            const pedido = document.getElementById('pedidoInput').value;
+            const pedido = document.getElementById('nfInput').value;
             const positivos = Array.from(form.querySelectorAll('input[name="pos"]:checked')).map(i => i.value).join(", ");
             const negativos = Array.from(form.querySelectorAll('input[name="neg"]:checked')).map(i => i.value).join(", ");
 
             const formData = new FormData();
-            formData.append("pedido", pedido);
+            formData.append("nf", nf);
             formData.append("nota", nota.value);
             formData.append("positivos", positivos);
             formData.append("negativos", negativos);
