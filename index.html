@@ -47,7 +47,7 @@
             box-sizing: border-box;
         }
 
-        /* Tela 1: Input de Pedido */
+        /* Tela 1: Input da NF */
         .label-large { font-size: 1.6rem; color: white; margin-bottom: 25px; font-weight: 600; }
         .input-nf {
             width: 80%;
@@ -188,7 +188,7 @@
                 
                 // Verifica limite mínimo
                 if (valor.length < 6) {
-                    alert("O número do pedido é muito curto (mínimo 6 digitos).");
+                    alert("O número da Nota Fiscal é muito curto (mínimo 6 digitos).");
                     input.focus();
                     return;
                 }
@@ -216,7 +216,7 @@
             btn.innerText = "Enviando sua resposta...";
             btn.disabled = true;
 
-            const pedido = document.getElementById('nfInput').value;
+            const nf = document.getElementById('nfInput').value;
             const positivos = Array.from(form.querySelectorAll('input[name="pos"]:checked')).map(i => i.value).join(", ");
             const negativos = Array.from(form.querySelectorAll('input[name="neg"]:checked')).map(i => i.value).join(", ");
 
